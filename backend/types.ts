@@ -12,5 +12,4 @@ export interface PhotoMutation {
   title: string;
   image: string | null;
   author: string;
-  isPublished: boolean;
 }

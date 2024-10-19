@@ -39,5 +39,4 @@ export interface Photo {
   title: string;
   image: string;
   author: string;
-  isPublished: boolean;
 }

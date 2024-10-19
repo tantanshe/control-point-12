@@ -4,7 +4,6 @@ import {
   deletePhoto,
   fetchAllPhotos,
   fetchPhotosByAuthorId,
-  updatePhoto
 } from './photosThunks';
 import {Photo} from '../../types';
 import {RootState} from '../../app/store';
@@ -77,23 +76,6 @@ const photosSlice = createSlice({
         state.loading = false;
       })
       .addCase(deletePhoto.rejected, (state) => {
-        state.loading = false;
-        state.error = true;
-      });
-
-    builder
-      .addCase(updatePhoto.pending, (state) => {
-        state.loading = true;
-        state.error = false;
-      })
-      .addCase(updatePhoto.fulfilled, (state, action) => {
-        const index = state.photos.findIndex(photo => photo._id === action.payload._id);
-        if (index !== -1) {
-          state.photos[index] = action.payload;
-        }
-        state.loading = false;
-      })
-      .addCase(updatePhoto.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });

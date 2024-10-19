@@ -32,11 +32,3 @@ export const deletePhoto = createAsyncThunk<void, string>(
     await axiosApi.delete(`/photos/${photoId}`);
   }
 );
-
-export const updatePhoto = createAsyncThunk<Photo, string>(
-  'photos/updatePhoto',
-  async (photoId) => {
-    const response = await axiosApi.patch(`/photos/${photoId}/togglePublished`);
-    return response.data;
-  }
-);

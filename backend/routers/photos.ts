@@ -11,9 +11,8 @@ const photosRouter = express.Router();
 photosRouter.get('/', async (req, res, next) => {
   try {
     const photoQuery: {
-      isPublished?: boolean;
       author?: string;
-    } = { isPublished: true };
+    } = {};
 
     const authorId = req.query.author as string;
 
@@ -42,7 +41,6 @@ photosRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWi
       title: req.body.title,
       image: req.file ? req.file.filename : null,
       author: req.body.user,
-      isPublished: false,
     };
 
     const photo = new Photo(photoData);
@@ -70,23 +68,6 @@ photosRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
 
     await Photo.deleteOne({_id: req.params.id});
     res.send({message: 'Photo deleted successfully'});
-  } catch (error) {
-    next(error);
-  }
-});
-
-photosRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
-  try {
-    const photo = await Photo.findById(req.params.id);
-
-    if (!photo) {
-      return res.status(404).json({error: 'Photo not found'});
-    }
-
-    photo.isPublished = !photo.isPublished;
-    await photo.save();
-
-    res.json(photo);
   } catch (error) {
     next(error);
   }

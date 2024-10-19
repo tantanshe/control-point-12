@@ -16,11 +16,6 @@ const PhotoSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  isPublished: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
 });
 
 const Photo = mongoose.model('Photo', PhotoSchema);
