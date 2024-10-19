@@ -10,7 +10,7 @@ export interface UserFields {
 
 export interface PhotoMutation {
   title: string;
-  image: string;
+  image: string | null;
   author: string;
   isPublished: boolean;
 }
