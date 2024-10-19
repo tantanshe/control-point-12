@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import Photo from '../models/Photo';
 import {imagesUpload} from '../multer';
 import auth, {RequestWithUser} from '../middleware/auth';
-import permit from '../middleware/permit';
 import {PhotoMutation} from '../types';
 
 const photosRouter = express.Router();
@@ -20,7 +19,7 @@ photosRouter.get('/', async (req, res, next) => {
       photoQuery.author = authorId;
     }
 
-    const photos = await Photo.find(photoQuery).populate('author', 'displayName');
+    const photos = await Photo.find(photoQuery).populate('author');
     res.json(photos);
   } catch (error) {
     next(error);
@@ -40,11 +39,12 @@ photosRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWi
     const photoData: PhotoMutation = {
       title: req.body.title,
       image: req.file ? req.file.filename : null,
-      author: req.body.user,
+      author: req.body.author,
     };
 
     const photo = new Photo(photoData);
     await photo.save();
+
     res.send(photo);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {

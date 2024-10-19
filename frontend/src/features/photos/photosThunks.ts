@@ -13,12 +13,12 @@ export const fetchAllPhotos = createAsyncThunk<Photo[]>(
 export const fetchPhotosByAuthorId = createAsyncThunk<Photo[], string>(
   'photos/fetchPhotosByAuthorId',
   async (authorId) => {
-    const response = await axiosApi.get(`/photos/author/${authorId}`);
+    const response = await axiosApi.get(`/photos?author=${authorId}`);
     return response.data;
   }
 );
 
-export const addPhoto = createAsyncThunk<Photo, FormData>(
+export const addPhoto = createAsyncThunk<Photo, Photo>(
   'photos/addPhoto',
   async (photoData) => {
     const response = await axiosApi.post('/photos', photoData);

@@ -19,7 +19,6 @@ const AddPhoto: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, files} = e.target;
     if (files) {
@@ -37,11 +36,17 @@ const AddPhoto: React.FC = () => {
       return;
     }
 
+    if (!user) {
+      setError('User is not authenticated.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', state.title);
     if (state.image) {
       formData.append('image', state.image);
     }
+    formData.append('author', user._id);
 
     dispatch(addPhoto(formData))
       .then(() => {

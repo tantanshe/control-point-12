@@ -37,6 +37,9 @@ export interface GlobalError {
 export interface Photo {
   _id?: string;
   title: string;
-  image: string;
-  author: string;
+  image: File | null;
+  author: {
+    _id: string,
+    displayName: string;
+  };
 }

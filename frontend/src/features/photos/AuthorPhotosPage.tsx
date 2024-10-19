@@ -2,8 +2,8 @@ import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchPhotosByAuthorId, deletePhoto} from './photosThunks';
 import {selectPhotos, selectIsPhotosLoading, selectPhotosError} from './photosSlice';
-import {Card, CardContent, CardMedia, Typography, CircularProgress, Alert, Grid, Button} from '@mui/material';
-import {useParams} from 'react-router-dom';
+import {Card, CardContent, CardMedia, Typography, CircularProgress, Alert, Grid, Button, Box} from '@mui/material';
+import {NavLink, useParams} from 'react-router-dom';
 import {selectUser} from '../users/usersSlice';
 import PhotoModal from './PhotoModal';
 import {Photo} from '../../types';
@@ -39,6 +39,32 @@ const AuthorPhotosPage: React.FC = () => {
 
   return (
     <>
+      {user?._id === authorId && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mt: 2,
+          }}
+        >
+          <Button
+            component={NavLink}
+            to="/addPhoto"
+            color="inherit"
+            variant="outlined"
+            sx={{
+              borderColor: '#6573c3',
+              color: '#6573c3',
+              '&:hover': {
+                borderColor: '#6573c3',
+                backgroundColor: '#e2eaff',
+              },
+            }}
+          >
+            Add new photo
+          </Button>
+        </Box>
+      )}
       {photos.length === 0 ? (
         <Typography variant="h6" align="center">
           No photos available for this author.
@@ -59,7 +85,14 @@ const AuthorPhotosPage: React.FC = () => {
                 <CardContent>
                   <Typography variant="h5">{photo.title}</Typography>
                   {isAdmin && (
-                    <Button variant="contained" color="secondary" onClick={() => handleDelete(photo._id, authorId)}>
+                    <Button variant="contained" color="secondary" sx={{mt: 2}}
+                            onClick={() => handleDelete(photo._id, authorId)}>
+                      Delete
+                    </Button>
+                  )}
+                  {user?._id === authorId && (
+                    <Button variant="contained" color="secondary" sx={{mt: 2}}
+                            onClick={() => handleDelete(photo._id, authorId)}>
                       Delete
                     </Button>
                   )}
@@ -72,6 +105,7 @@ const AuthorPhotosPage: React.FC = () => {
       {selectedPhoto && <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)}/>}
     </>
   );
+
 };
 
 export default AuthorPhotosPage;

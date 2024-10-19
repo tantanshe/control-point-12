@@ -56,10 +56,10 @@ const PhotoGallery: React.FC = () => {
                 <CardContent>
                   <Typography variant="h5">{photo.title}</Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Author: <Link to={`/authors/${photo.author}`}>{photo.author}</Link>
+                    Author: <Link to={`/photos/${photo.author._id}`}>{photo.author.displayName}</Link>
                   </Typography>
                   {isAdmin && (
-                    <Button variant="contained" color="secondary" onClick={() => handleDelete(photo._id)}>
+                    <Button variant="contained" color="secondary" sx={{mt: 2}} onClick={() => handleDelete(photo._id)}>
                       Delete
                     </Button>
                   )}
