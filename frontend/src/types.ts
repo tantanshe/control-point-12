@@ -33,3 +33,11 @@ export interface ValidationError {
 export interface GlobalError {
   error: string;
 }
+
+export interface Photo {
+  _id?: string;
+  title: string;
+  image: string;
+  author: string;
+  isPublished: boolean;
+}

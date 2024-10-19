@@ -10,23 +10,18 @@ const photosRouter = express.Router();
 
 photosRouter.get('/', async (req, res, next) => {
   try {
-    const photos = await Photo.find({isPublished: true})
-      .populate('author', 'displayName')
-    res.json(photos);
-  } catch (error) {
-    next(error);
-  }
-});
+    const photoQuery: {
+      isPublished?: boolean;
+      author?: string;
+    } = { isPublished: true };
 
-photosRouter.get('/author/:authorId', async (req, res, next) => {
-  try {
-    const photos = await Photo.find({author: req.params.authorId, isPublished: true})
-      .populate('author', 'displayName');
+    const authorId = req.query.author as string;
 
-    if (!photos.length) {
-      return res.status(404).json({error: 'No photos found for this author'});
+    if (authorId) {
+      photoQuery.author = authorId;
     }
 
+    const photos = await Photo.find(photoQuery).populate('author', 'displayName');
     res.json(photos);
   } catch (error) {
     next(error);
