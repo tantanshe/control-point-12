@@ -8,6 +8,9 @@ import {persistor, store} from './app/store';
 import {ThemeProvider} from '@mui/material';
 import theme from './theme';
 import {BrowserRouter} from 'react-router-dom';
+import {addInterceptors} from './axiosApi';
+
+addInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

@@ -39,10 +39,9 @@ photosRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWi
     const photoData: PhotoMutation = {
       title: req.body.title,
       image: req.file ? req.file.filename : null,
-      author: req.body.author,
     };
 
-    const photo = new Photo(photoData);
+    const photo = new Photo({ ...photoData, author: req.user._id });
     await photo.save();
 
     res.send(photo);

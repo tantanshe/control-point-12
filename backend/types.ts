@@ -11,5 +11,4 @@ export interface UserFields {
 export interface PhotoMutation {
   title: string;
   image: string | null;
-  author: string;
 }
