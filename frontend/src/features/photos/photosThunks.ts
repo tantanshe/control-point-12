@@ -2,6 +2,11 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
 import {Photo} from '../../types';
 
+interface FetchPhotosResponse {
+  photos: Photo[];
+  authorName: string | null;
+}
+
 export const fetchAllPhotos = createAsyncThunk<Photo[]>(
   'photos/fetchAllPhotos',
   async () => {
@@ -10,11 +15,18 @@ export const fetchAllPhotos = createAsyncThunk<Photo[]>(
   }
 );
 
-export const fetchPhotosByAuthorId = createAsyncThunk<Photo[], string>(
+export const fetchPhotosByAuthorId = createAsyncThunk<FetchPhotosResponse, string>(
   'photos/fetchPhotosByAuthorId',
   async (authorId) => {
-    const response = await axiosApi.get(`/photos?author=${authorId}`);
-    return response.data;
+    const response = await axiosApi.get<Photo[]>(`/photos?author=${authorId}`);
+    const photos = response.data;
+
+    if (photos.length > 0) {
+      return { photos, authorName: photos[0].author.displayName };
+    }
+
+    const authorResponse = await axiosApi.get(`/users/${authorId}`);
+    return { photos: [], authorName: authorResponse.data.displayName };
   }
 );
 

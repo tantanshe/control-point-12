@@ -115,4 +115,18 @@ usersRouter.delete('/sessions', async (req, res, next) => {
   }
 });
 
+usersRouter.get('/:id', async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+
+    res.send(user);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 export default usersRouter;

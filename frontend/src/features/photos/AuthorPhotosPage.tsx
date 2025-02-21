@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchPhotosByAuthorId, deletePhoto} from './photosThunks';
-import {selectPhotos, selectIsPhotosLoading, selectPhotosError} from './photosSlice';
+import {selectPhotos, selectIsPhotosLoading, selectPhotosError, selectAuthorName} from './photosSlice';
 import {Card, CardContent, CardMedia, Typography, CircularProgress, Alert, Grid, Button, Box} from '@mui/material';
 import {NavLink, useParams} from 'react-router-dom';
 import {selectUser} from '../users/usersSlice';
@@ -18,6 +18,7 @@ const AuthorPhotosPage: React.FC = () => {
   const user = useAppSelector(selectUser);
   const [selectedPhoto, setSelectedPhoto] = React.useState<Photo | null>(null);
   const isAdmin = user?.role === 'admin';
+  const authorName = useAppSelector(selectAuthorName);
 
   useEffect(() => {
     if (authorId) {
@@ -65,6 +66,9 @@ const AuthorPhotosPage: React.FC = () => {
           </Button>
         </Box>
       )}
+      <Typography variant="h4" sx={{mr: 1, mb: 2}}>
+        {authorName}
+      </Typography>
       {photos.length === 0 ? (
         <Typography variant="h6" align="center">
           No photos available for this author.
@@ -73,31 +77,43 @@ const AuthorPhotosPage: React.FC = () => {
         <Grid container spacing={2}>
           {photos.map(photo => (
             <Grid item key={photo._id} xs={12} sm={6} md={4}>
-              <Card>
-                <CardMedia
-                  component="img"
-                  height="300"
-                  image={`http://localhost:8000/${photo.image}`}
-                  alt={photo.title}
-                  style={{objectFit: 'cover'}}
-                  onClick={() => openModal(photo)}
-                />
-                <CardContent>
-                  <Typography variant="h5">{photo.title}</Typography>
-                  {isAdmin && (
-                    <Button variant="contained" color="secondary" sx={{mt: 2}}
-                            onClick={() => handleDelete(photo._id, authorId)}>
-                      Delete
-                    </Button>
+              {photo && (
+                <Card>
+                  {photo.image && (
+                    <CardMedia
+                      component="img"
+                      height="300"
+                      image={`http://localhost:8000/${photo.image}`}
+                      alt={photo.title || 'Photo'}
+                      style={{objectFit: 'cover'}}
+                      onClick={() => openModal(photo)}
+                    />
                   )}
-                  {user?._id === authorId && (
-                    <Button variant="contained" color="secondary" sx={{mt: 2}}
-                            onClick={() => handleDelete(photo._id, authorId)}>
-                      Delete
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+                  <CardContent>
+                    {photo.title && <Typography variant="h5">{photo.title}</Typography>}
+                    {isAdmin && (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{mt: 2}}
+                        onClick={() => handleDelete(photo._id, authorId)}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                    {user?._id === authorId && (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{mt: 2}}
+                        onClick={() => handleDelete(photo._id, authorId)}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </Grid>
           ))}
         </Grid>
@@ -105,7 +121,6 @@ const AuthorPhotosPage: React.FC = () => {
       {selectedPhoto && <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)}/>}
     </>
   );
-
 };
 
 export default AuthorPhotosPage;

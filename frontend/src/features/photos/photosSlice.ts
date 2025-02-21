@@ -10,12 +10,14 @@ import {RootState} from '../../app/store';
 
 interface PhotosState {
   photos: Photo[];
+  authorName: string | null;
   loading: boolean;
   error: boolean;
 }
 
 const initialState: PhotosState = {
   photos: [],
+  authorName: null,
   loading: false,
   error: false,
 };
@@ -45,7 +47,8 @@ const photosSlice = createSlice({
       })
       .addCase(fetchPhotosByAuthorId.fulfilled, (state, action) => {
         state.loading = false;
-        state.photos = action.payload;
+        state.photos = action.payload.photos;
+        state.authorName = action.payload.authorName;
       })
       .addCase(fetchPhotosByAuthorId.rejected, (state) => {
         state.loading = false;
@@ -85,5 +88,6 @@ const photosSlice = createSlice({
 export const selectPhotos = (state: RootState) => state.photos.photos;
 export const selectIsPhotosLoading = (state: RootState) => state.photos.loading;
 export const selectPhotosError = (state: RootState) => state.photos.error;
+export const selectAuthorName = (state: RootState) => state.photos.authorName;
 
 export const photosReducer = photosSlice.reducer;
